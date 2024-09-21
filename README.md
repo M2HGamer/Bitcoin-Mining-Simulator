@@ -23,4 +23,4 @@ This project is a web-based simulation that allows users to experience the conce
 
 1. Clone the repository:
    `bash
-   git clone https://m2hgamer.github.io/Bitcoin-Mining-Simulator.git
+   git clone https://m2hgamer.github.io/Bitcoin-Mining-Simulator
