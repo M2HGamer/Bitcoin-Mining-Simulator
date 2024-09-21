@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin Mining Simulation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1a1a1a;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Navbar Styling */
+        nav {
+            background-color: #111;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-right: 20px;
+        }
+
+        nav ul li a {
+            color: #f7d733;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 18px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            background-color: #f7d733;
+            color: #111;
+        }
+
+        nav a {
+            color: #f7d733;
+            font-weight: 700;
+            text-decoration: none;
+            font-size: 20px;
+        }
+
+        .container {
+            flex-grow: 1;
+            display: none;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .container.active {
+            display: block;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 20px;
+            color: #f7d733;
+        }
+
+        p {
+            font-size: 18px;
+            margin: 15px 0;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #f7d733;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ffd700;
+        }
+
+        #miningPoints {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #e5e5e5;
+            height: 200px;
+            overflow-y: auto;
+            background-color: #333;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        /* Wallet Balance Section Styling */
+        #balance, #walletBalance {
+            font-size: 22px;
+            margin-top: 20px;
+            color: #f7d733;
+            background-color: #222;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #f7d733;
+            display: inline-block;
+        }
+
+        /* Withdrawal Section Styling */
+        #withdrawalSection {
+            margin-top: 40px;
+            background-color: #222;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        #withdrawAmount {
+            padding: 10px;
+            font-size: 18px;
+            border: 2px solid #f7d733;
+            border-radius: 8px;
+            margin-right: 10px;
+            width: 150px;
+            background-color: #333;
+            color: #fff;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #111;
+            padding: 20px;
+            text-align: center;
+            color: #f7d733;
+            margin-top: auto;
+        }
+
+        footer a {
+            color: #f7d733;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        footer a:hover {
+            color: #ffd700;
+        }
+
+        footer ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        footer ul li {
+            margin: 0 10px;
+        }
+
+        /* Social Media Icons */
+        footer ul li a i {
+            font-size: 24px;
+            color: #f7d733;
+            transition: color 0.3s ease;
+        }
+
+        footer ul li a i:hover {
+            color: #ffd700;
+        }
+
+        @media (max-width: 768px) {
+            nav ul li {
+                margin-right: 10px;
+            }
+
+            button {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            p {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div>
+            <a href="#" id="navHome"><i class="fas fa-home"></i> Home</a>
+        </div>
+        <ul>
+            <li><a href="#" id="navAbout"><i class="fas fa-info-circle"></i> About</a></li>
+            <li><a href="#" id="navWallet"><i class="fas fa-wallet"></i> Wallet</a></li>
+        </ul>
+    </nav>
+
+    <!-- Home Page -->
+    <div class="container active" id="homePage">
+        <h1>Bitcoin Mining Simulation</h1>
+        <p>Click the button below to start mining points continuously.</p>
+        <button id="startMining">Start Mining</button>
+        <button id="stopMining" style="display: none;">Stop Mining</button>
+        <div id="miningPoints"></div>
+        <div id="balance">Bitcoin Balance: 0.00000000 BTC</div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <h2>FAQ - Frequently Asked Questions</h2>
+            <div class="faq-question">What is Bitcoin Mining?</div>
+            <div class="faq-answer">Bitcoin mining is the process of validating and recording transactions on the Bitcoin blockchain by solving complex cryptographic puzzles using computer hardware.</div>
+            <div class="faq-question">Is this real Bitcoin mining?</div>
+            <div class="faq-answer">No, this is a simulated mining experience designed to help you understand how mining works. No real Bitcoin is generated or spent.</div>
+            <div class="faq-question">How does the Bitcoin balance update?</div>
+            <div class="faq-answer">For each simulated mining point, your Bitcoin balance is incremented slightly, giving you the feel of earning Bitcoin through mining.</div>
+        </div>
+    </div>
+
+    <!-- About Page -->
+    <div class="container" id="aboutPage">
+        <h1>About This Simulation</h1>
+        <p>This is a fun, educational Bitcoin mining simulation built by Prince, also known as M2HGamerz. The website demonstrates how mining works using a simplified, non-technical approach.</p>
+        <p>Bitcoin mining typically involves solving cryptographic puzzles to validate transactions on the blockchain. This simulation generates mining points to show how the process works in principle.</p>
+    </div>
+
+    <!-- Wallet Page -->
+    <div class="container" id="walletPage">
+        <h1>Your Wallet</h1>
+        <p>Your total mined balance is:</p>
+        <div id="walletBalance">0.00000000 BTC</div>
+
+        <h2>What is a Bitcoin Wallet?</h2>
+        <p>A Bitcoin wallet is a digital wallet that stores your Bitcoin balance and allows you to send and receive Bitcoin. Your wallet consists of a pair of cryptographic keys, a public key, and a private key. This simulation doesn’t involve real wallets, but mimics the idea of storing your mined Bitcoin balance.</p>
+
+        <h2>Security Tips</h2>
+        <ul>
+            <li>Always keep your private key secure.</li>
+            <li>Never share your private key with anyone.</li>
+            <li>Use two-factor authentication for additional security.</li>
+        </ul>
+
+        <!-- Withdrawal Section -->
+        <div id="withdrawalSection">
+            <h2>Withdrawal Section</h2>
+            <p>Enter the amount you wish to withdraw:</p>
+            <input type="number" id="withdrawAmount" placeholder="Amount in BTC">
+            <button id="withdrawButton">Withdraw</button>
+            <div id="withdrawMessage" style="margin-top: 10px;"></div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2024 Prince - M2HGamerz | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+        <ul>
+            <li><a href="#"><i class="fab fa-facebook"></i></a></li>
+            <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+            <li><a href="#"><i class="fab fa-linkedin"></i></a></li>
+            <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+        </ul>
+    </footer>
+
+    <script>
+        let mining = false;
+        let bitcoinBalance = 0;
+        let miningInterval;
+
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function startMiningPoints() {
+            mining = true;
+            let nonce = 0;
+            const miningPointsDiv = document.getElementById('miningPoints');
+            const balanceDiv = document.getElementById('balance');
+            const walletBalanceDiv = document.getElementById('walletBalance');
+
+            document.getElementById('startMining').style.display = 'none';
+            document.getElementById('stopMining').style.display = 'inline-block';
+
+            miningInterval = setInterval(async () => {
+                if (mining) {
+                    const message = `M2H nonce:${nonce}`;
+                    const hash = await sha256(message);
+                    nonce++;
+
+                    const miningPoint = `Mining point: Nonce #${nonce}, Hash: ${hash}`;
+                    const newDiv = document.createElement('div');
+                    newDiv.textContent = miningPoint;
+                    miningPointsDiv.appendChild(newDiv);
+
+                    miningPointsDiv.scrollTop = miningPointsDiv.scrollHeight;
+
+                    bitcoinBalance += 0.00000001;
+                    balanceDiv.textContent = `Bitcoin Balance: ${bitcoinBalance.toFixed(8)} BTC`;
+                    walletBalanceDiv.textContent = `${bitcoinBalance.toFixed(8)} BTC`;
+                }
+            }, 100);
+        }
+
+        function stopMiningPoints() {
+            mining = false;
+            clearInterval(miningInterval);
+            document.getElementById('startMining').style.display = 'inline-block';
+            document.getElementById('stopMining').style.display = 'none';
+        }
+
+        // Navigation
+        document.getElementById('navHome').addEventListener('click', function () {
+            setActivePage('homePage');
+        });
+
+        document.getElementById('navAbout').addEventListener('click', function () {
+            setActivePage('aboutPage');
+        });
+
+        document.getElementById('navWallet').addEventListener('click', function () {
+            setActivePage('walletPage');
+        });
+
+        function setActivePage(pageId) {
+            document.querySelectorAll('.container').forEach(container => {
+                container.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // Start and Stop Mining
+        document.getElementById('startMining').addEventListener('click', startMiningPoints);
+        document.getElementById('stopMining').addEventListener('click', stopMiningPoints);
+
+        // Withdrawal Functionality
+        document.getElementById('withdrawButton').addEventListener('click', function () {
+            const withdrawAmount = parseFloat(document.getElementById('withdrawAmount').value);
+            const withdrawMessage = document.getElementById('withdrawMessage');
+
+            if (withdrawAmount > 0 && withdrawAmount <= bitcoinBalance) {
+                bitcoinBalance -= withdrawAmount;
+                withdrawMessage.textContent = `Successfully withdrew ${withdrawAmount.toFixed(8)} BTC. Redirecting to payment section...`;
+                document.getElementById('walletBalance').textContent = `${bitcoinBalance.toFixed(8)} BTC`;
+                document.getElementById('withdrawAmount').value = ''; // Clear input
+                
+                // Redirect to payment section (mockup)
+                setTimeout(() => {
+                    alert('Redirecting to payment page...');
+                    // Here you can redirect to an actual payment page if available
+                }, 2000);
+            } else {
+                withdrawMessage.textContent = 'Invalid withdrawal amount.';
+            }
+        });
+    </script>
+
+</body>
+
+</html>
